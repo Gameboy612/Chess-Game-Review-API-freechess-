@@ -1,3 +1,21 @@
+# Game Report API documentation - Gameboy612
+
+
+POST: `/api/analyse` for getting game report from game.
+```json
+{
+    "pgn": "...",
+    "depth": 16 (optional, default: 16)
+}
+```
+
+# Original README.md below (Installation):
+<br><br>
+
+---
+---
+<br>
+
 # WintrCat's Game Report
 
 Generate classifications for your Chess moves, for free. Available @ [chess.wintrcat.uk](https://chess.wintrcat.uk/)
