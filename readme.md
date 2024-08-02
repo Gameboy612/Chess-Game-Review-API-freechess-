@@ -1,4 +1,7 @@
-# Game Report API documentation - Gameboy612
+# Introduction
+This project is to reverse engineer wintrcat's chess classification algorithm, and add an API for the backend. Other applications can send a POST request with the PGN, and obtain the chess move classifications as the response.
+
+# Game Report API documentation
 
 
 POST: `/api/analyse` for getting game report from game.
@@ -9,12 +12,11 @@ POST: `/api/analyse` for getting game report from game.
 }
 ```
 
-# Original README.md below (Installation):
 <br><br>
 
----
----
-<br>
+**Original README.md below (Installation):**
+
+<br><br>
 
 # WintrCat's Game Report
 
