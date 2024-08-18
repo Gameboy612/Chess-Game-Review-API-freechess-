@@ -11,7 +11,7 @@ import { EngineLine, Position } from "./types";
 
 const router = Router();
 
-const parse = async (pgn: any, res: any) => {
+const parse = async (pgn: any, fen: string | undefined, res: any) => {
     
     
     if (!pgn) {
@@ -30,7 +30,7 @@ const parse = async (pgn: any, res: any) => {
     }
 
     // Create a virtual board
-    let board = new Chess();
+    let board = typeof fen == "string" ? new Chess(fen) : new Chess();
     let positions: Position[] = [];
 
     positions.push({ fen: board.fen() });
@@ -60,8 +60,8 @@ const parse = async (pgn: any, res: any) => {
     return positions
 }
 router.post("/parse", async (req, res) => {
-    let { pgn }: ParseRequestBody = req.body;
-    const positions = await parse(pgn, res);
+    let { pgn, fen }: ParseRequestBody = req.body;
+    const positions = await parse(pgn, fen, res);
     res.json({ positions });
 });
 
@@ -88,14 +88,14 @@ router.post("/report", async (req, res) => {
 
 
 
-async function evaluate(res: any, pgn: string, depth: number = 16) {
+async function evaluate(res: any, pgn: string, fen: string, depth: number = 16) {
     let ongoingEvaluation = false;
 
     let evaluatedPositions: Position[] = [];
 
     console.log("Step 1")
 
-    var positions = await parse(pgn, res);
+    var positions = await parse(pgn, fen, res);
 
     console.log("Step 2")
     
@@ -224,7 +224,7 @@ async function evaluate(res: any, pgn: string, depth: number = 16) {
         last_progress = progress;
     }, 100);
 
-    console.log("Step 4", ongoingEvaluation)
+    console.log("Step 4")
     
     while (ongoingEvaluation) {
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -238,7 +238,7 @@ async function evaluate(res: any, pgn: string, depth: number = 16) {
 }
 
 router.post("/analyse", async (req, res) => {
-    let { pgn, depth } = req.body;
+    let { pgn, fen, depth } = req.body;
 
     // Content validate PGN input
     if (!pgn) {
@@ -249,7 +249,7 @@ router.post("/analyse", async (req, res) => {
         depth = 16;
     }
     try {
-        return res.json(await evaluate(res, pgn, depth));
+        return res.json(await evaluate(res, pgn, fen, depth));
 
     } catch (e) {
         console.log(e)
